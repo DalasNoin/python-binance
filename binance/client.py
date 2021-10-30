@@ -358,8 +358,11 @@ class Client(BaseClient):
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
-        uri = self._create_margin_api_uri(path)
+    def _request_margin_api(self, method, path, signed=False, version=None, **kwargs) -> Dict:
+        if version:
+            uri = self._create_margin_api_uri(path, version=version)
+        else:
+            uri = self._create_margin_api_uri(path)
 
         return self._request(method, uri, signed, **kwargs)
 
@@ -4918,7 +4921,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'sub-account/assets', True, data=params)
+        return self._request_margin_api('get', 'sub-account/assets', True, data=params, version=BaseClient.PRIVATE_API_VERSION)
 
     def query_subaccount_spot_summary(self, **params):
         """Query Sub-account Spot Assets Summary (For Master Account)
